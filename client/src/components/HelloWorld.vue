@@ -4,6 +4,7 @@
             ref="myVueDropzone"
             id="dropzone"
             :options="dropzoneOptions"
+            @vdropzone-sending="sendingEvent"
         ></vue-dropzone>
     </div>
 </template>
@@ -24,6 +25,11 @@ export default {
     },
     components: {
         vueDropzone: vue2Dropzone
+    },
+    methods: {
+        sendingEvent: function(file, xhr, formData) {
+            formData.append("uuid", file.upload.uuid);
+        }
     }
 };
 </script>
