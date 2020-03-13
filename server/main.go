@@ -4,6 +4,7 @@ import (
 	"server/handler"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/contrib/static"
 )
 
 func main() {
@@ -15,6 +16,9 @@ func main() {
 		AllowHeaders: []string{"*"},
 	}))
 
+	r.Use(static.Serve("/", static.LocalFile("./images", true)))
+
+	r.GET("/images", handler.List)
 	r.POST("/images", handler.Upload)
 	r.DELETE("/images/:uuid", handler.Delete)
 	r.Run(":8888")

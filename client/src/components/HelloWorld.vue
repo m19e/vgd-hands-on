@@ -26,6 +26,29 @@ export default {
             }
         };
     },
+    mounted() {
+        axios
+            .get("http://localhost:8888/images")
+            .then(res => {
+                res.data.forEach(res => {
+                    let filename = res.path.replace(
+                        "http://localhost:8888/",
+                        ""
+                    );
+                    let id = filename.replace(".png", "");
+                    var file = {
+                        size: res.size,
+                        name: filename,
+                        type: "image/type",
+                        upload: { uuid: id }
+                    };
+                    this.$refs.myVueDropzone.manuallyAddFile(file, res.path);
+                });
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    },
     components: {
         vueDropzone: vue2Dropzone
     },
