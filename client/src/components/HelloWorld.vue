@@ -5,11 +5,13 @@
             id="dropzone"
             :options="dropzoneOptions"
             @vdropzone-sending="sendingEvent"
+            @vdropzone-removed-file="removeEvent"
         ></vue-dropzone>
     </div>
 </template>
 
 <script>
+import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 
@@ -19,7 +21,8 @@ export default {
         return {
             dropzoneOptions: {
                 url: `http://localhost:8888/images`,
-                method: "post"
+                method: "post",
+                addRemoveLinks: "true"
             }
         };
     },
@@ -29,6 +32,16 @@ export default {
     methods: {
         sendingEvent: function(file, xhr, formData) {
             formData.append("uuid", file.upload.uuid);
+        },
+        removeEvent: function(file) {
+            axios
+                .delete(`http://localhost:8888/images/${file.upload.uuid}`)
+                .then(res => {
+                    console.log(res.data);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
         }
     }
 };
